@@ -52,10 +52,11 @@ class SyncIntegrationTest {
         tapOnSygIn()
         // Instead of waiting we will wait for the connected screen
         sleep(5000)
-        mDevice.pressBack()
-        mDevice.pressBack()
-        mDevice.pressBack()
-        mDevice.pressBack()
+        tapReturnToPreviousApp()
+        // mDevice.pressBack()
+        // mDevice.pressBack()
+        // mDevice.pressBack()
+        // mDevice.pressBack()
         homeScreen {
         }.openThreeDotMenu {}
         libraryButton()
@@ -169,6 +170,14 @@ class SyncIntegrationTest {
     fun historyAfterSyncIsShown() {
         val historyEntry = mDevice.findObject(By.text("www.example.com"))
         historyEntry.isClickable()
+    }
+
+    fun tapReturnToPreviousApp(){
+        val tapXButton = mDevice.findObject(UiSelector()
+                .instance(0)
+                .className(ImageButton::class.java))
+        tapXButton.waitForExists(10000)
+        tapXButton.click()
     }
 }
 

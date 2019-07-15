@@ -2,7 +2,7 @@
 set -e
 
 echo "Waiting emulator is ready..."
-emulator -avd Pixel_API_28 -wipe-data -no-boot-anim -screen no-touch & EMULATOR_PID=$! &
+emulator -avd Pixel_3_API_28 -wipe-data -no-boot-anim -screen no-touch & EMULATOR_PID=$! &
 
 bootanim=""
 failcounter=0

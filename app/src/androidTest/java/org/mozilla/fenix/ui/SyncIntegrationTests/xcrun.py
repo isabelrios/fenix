@@ -14,4 +14,4 @@ class XCRun(object):
         os.system('adb devices | grep emulator | cut -f1 | while read line; do adb -s $line emu kill; done')
         #os.system('emulator -avd Pixel_API_28 -wipe-data -no-boot-anim -screen no-touch & EMULATOR_PID=$! &')
         # Then launch sim
-        os.system("sh testScript.sh")
+        os.system("sh launchSimScript.sh")
