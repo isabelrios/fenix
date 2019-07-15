@@ -2,14 +2,14 @@
 set -e
 
 echo "Waiting emulator is ready..."
-emulator -avd Pixel_3_API_28 -wipe-data -no-boot-anim -screen no-touch & EMULATOR_PID=$! &
+~/Library/Android/sdk/emulator/emulator -avd Pixel_3_API_28 -wipe-data -no-boot-anim -screen no-touch &
 
 bootanim=""
 failcounter=0
 timeout_in_sec=360
 
 until [[ "$bootanim" =~ "stopped" ]]; do
-  bootanim=`adb -e shell getprop init.svc.bootanim 2>&1 &`
+  bootanim=`~/Library/Android/sdk/platform-tools/adb -e shell getprop init.svc.bootanim 2>&1 &`
   if [[ "$bootanim" =~ "device not found" || "$bootanim" =~ "device offline"
     || "$bootanim" =~ "running" ]]; then
     let "failcounter += 1"

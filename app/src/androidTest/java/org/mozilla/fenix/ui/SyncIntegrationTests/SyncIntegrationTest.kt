@@ -7,6 +7,7 @@ package org.mozilla.fenix.ui.SyncIntegrationTests
 import android.os.SystemClock.sleep
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
@@ -89,6 +90,7 @@ class SyncIntegrationTest {
         // clickSygnIn()
         typeEmail()
         tapOnContinueButton()
+        sleep(10000)
         typePassowrd()
         tapOnSygIn()
         sleep(10000)
@@ -127,13 +129,12 @@ class SyncIntegrationTest {
         emailInput.waitForExists(10000)
 
         val emailAddress = javaClass.classLoader.getResource("email.txt").readText()
-        emailInput.setText(emailAddress)
+        // emailInput.setText(emailAddress)
         // Use prod test account until stage can be set and so the generated account can be used
-        // emailInput.setText("test-123456@restmail.net")
+        emailInput.setText("test-123456@restmail.net")
     }
 
     fun tapOnContinueButton() {
-        sleep(1000)
         val continueButton = mDevice.findObject(By.res("submit-btn"))
         continueButton.click()
     }

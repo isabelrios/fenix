@@ -7,12 +7,9 @@ def test_sync_history_from_desktop(tps, xcodebuild):
 
     # Does not work changing files name???
     #gradlew.test()
-
     tps.run('test_history.js')
     xcodebuild.test('checkHistoryTest')
 
     # For the future, this way we change the test to run....
     #xcodebuild.test('getHistoryTest')
-    
-    
     

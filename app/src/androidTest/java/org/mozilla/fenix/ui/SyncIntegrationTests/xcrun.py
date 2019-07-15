@@ -11,7 +11,7 @@ class XCRun(object):
     
     def launch(self):
         # First close sim if any then launch
-        os.system('adb devices | grep emulator | cut -f1 | while read line; do adb -s $line emu kill; done')
+        os.system('~/Library/Android/sdk/platform-tools/adb devices | grep emulator | cut -f1 | while read line; do ~/Library/Android/sdk/platform-tools/adb -s $line emu kill; done')
         #os.system('emulator -avd Pixel_API_28 -wipe-data -no-boot-anim -screen no-touch & EMULATOR_PID=$! &')
         # Then launch sim
         os.system("sh launchSimScript.sh")
