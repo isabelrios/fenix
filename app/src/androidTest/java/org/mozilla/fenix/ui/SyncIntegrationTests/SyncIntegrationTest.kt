@@ -29,6 +29,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.By
+import androidx.test.uiautomator.Until
 import org.mozilla.fenix.R
 
 class SyncIntegrationTest {
@@ -49,15 +50,14 @@ class SyncIntegrationTest {
 
         typeEmail()
         tapOnContinueButton()
+        sleep(1000)
         typePassowrd()
         tapOnSygIn()
         // Instead of waiting we will wait for the connected screen
         sleep(5000)
         tapReturnToPreviousApp()
-        // mDevice.pressBack()
-        // mDevice.pressBack()
-        // mDevice.pressBack()
-        // mDevice.pressBack()
+
+        sleep(5000)
         homeScreen {
         }.openThreeDotMenu {}
         libraryButton()
@@ -90,7 +90,7 @@ class SyncIntegrationTest {
         // clickSygnIn()
         typeEmail()
         tapOnContinueButton()
-        sleep(10000)
+        sleep(5000)
         typePassowrd()
         tapOnSygIn()
         sleep(10000)
@@ -126,7 +126,7 @@ class SyncIntegrationTest {
         val emailInput = mDevice.findObject(UiSelector()
                 .instance(0)
                 .className(EditText::class.java))
-        emailInput.waitForExists(10000)
+        emailInput.waitForExists(1000)
 
         val emailAddress = javaClass.classLoader.getResource("email.txt").readText()
         // emailInput.setText(emailAddress)
@@ -136,14 +136,16 @@ class SyncIntegrationTest {
 
     fun tapOnContinueButton() {
         val continueButton = mDevice.findObject(By.res("submit-btn"))
-        continueButton.click()
+        continueButton.clickAndWait(Until.newWindow(), 50000)
     }
 
     fun typePassowrd() {
+        mDevice.wait(Until.findObjects(By.text("Sign in")), 10000)
         val passwordInput = mDevice.findObject(UiSelector()
                 .instance(0)
                 .className(EditText::class.java))
-        passwordInput.waitForExists(10000)
+        //passwordInput.waitForExists(10000)
+
         val passwordValue = javaClass.classLoader.getResource("password.txt").readText()
         // passwordInput.setText(passwordValue)
         // Same for password
@@ -151,7 +153,6 @@ class SyncIntegrationTest {
     }
 
     fun tapOnSygIn() {
-        // val signInButton = mDevice.findObject(By.res("submit-btn"))
         val signInButton = mDevice.findObject(UiSelector()
                 .instance(0)
                 .className(Button::class.java))
@@ -174,6 +175,7 @@ class SyncIntegrationTest {
     }
 
     fun tapReturnToPreviousApp(){
+        mDevice.wait(Until.findObjects(By.text("Connected")), 10000)
         val tapXButton = mDevice.findObject(UiSelector()
                 .instance(0)
                 .className(ImageButton::class.java))
@@ -190,7 +192,7 @@ fun libraryButton() = ClickActions.click { text("Your Library") }
 fun historyButton() = ClickActions.click { text("History") }
 fun historyDisplayed() = onView(withId(org.mozilla.fenix.R.id.delete_history_button))
         .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-fun newScreenClickOnEmail() =onView(withId(R.id.sign_in_email_button)).perform(click())
+fun newScreenClickOnEmail() = onView(withId(R.id.sign_in_email_button)).perform(click())
 // To tap on 'x' after sign in, is content-description: Return to previous app and it takes to Settings
 // (one go back and you are in Homescreen)
 // a solution instead of going back by pressing device key
