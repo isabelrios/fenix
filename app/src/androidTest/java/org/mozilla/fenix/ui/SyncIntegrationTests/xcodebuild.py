@@ -20,7 +20,7 @@ class XCodeBuild(object):
         self.xcrun.launch()
         #os.chdir('/Users/isabelrios/git/fenix/')
         # Change path accordingly to go to root folder to run gradlew
-        os.chdir('/Users/synctesting/.jenkins/workspace/fenix@2/')
+        os.chdir('../../../../../../../../..')
         args = './gradlew ' + 'app:connectedX86DebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=org.mozilla.fenix.ui.SyncIntegrationTests.SyncIntegrationTest#{}'.format(identifier)
         os.system(args)
 
