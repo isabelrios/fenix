@@ -81,38 +81,6 @@ class SyncIntegrationTest {
     }
 
     @Test
-    fun historyAndSync() {
-        homeScreen {
-        }.openThreeDotMenu {
-            verifySettingsButton()
-        }.openSettings {}
-        settingsAccount()
-        // clickSygnIn()
-        typeEmail()
-        tapOnContinueButton()
-        sleep(5000)
-        typePassowrd()
-        tapOnSygIn()
-        sleep(10000)
-        // we need to wait here until the sync is done
-        // then press back button to go to homescreen
-        // workaround until btter way is found
-        mDevice.pressBack()
-        mDevice.pressBack()
-        mDevice.pressBack()
-        mDevice.pressBack()
-        // mDevice.pressBack()
-        tapInToolBar()
-        typeInToolBar()
-        mDevice.pressBack()
-        homeScreen {
-        }.openThreeDotMenu {}
-        libraryButton()
-        historyButton()
-        historyDisplayed()
-    }
-
-    @Test
     fun openHistory() {
         homeScreen {
         }.openThreeDotMenu {}
