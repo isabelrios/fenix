@@ -3,13 +3,14 @@ import sys
 
 def test_sync_history_from_desktop(tps, xcodebuild):
     # Old way running tests from script - cons how to select specific test
-    #os.system("sh scriptName.sh")
+    # os.system("sh scriptName.sh")
 
-    # Does not work changing files name???
-    #gradlew.test()
+    # Running tests
     tps.run('test_history.js')
-    xcodebuild.test('checkHistoryTest')
-
-    # For the future, this way we change the test to run....
-    #xcodebuild.test('getHistoryTest')
-    
+    xcodebuild.test('checkHistoryFromDesktopTest')
+'''   
+# For the future, this way we change the test to run....
+def test_sync_bookmark_from_device(tps, xcodebuild):
+    xcodebuild.test('checkBookmarkFromDeviceTest')
+    tps.run('app/src/androidTest/java/org/mozilla/fenix/ui/SyncIntegrationTests/test_bookmark.js')
+    '''

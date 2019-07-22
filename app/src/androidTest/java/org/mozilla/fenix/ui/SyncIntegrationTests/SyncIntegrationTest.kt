@@ -23,8 +23,6 @@ import br.com.concretesolutions.kappuccino.actions.ClickActions
 import org.hamcrest.Matchers.allOf
 import org.mozilla.fenix.helpers.click
 
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
@@ -39,20 +37,23 @@ class SyncIntegrationTest {
     val activityTestRule = HomeActivityTestRule()
 
     @Test
-    fun checkHistoryTest() {
+    fun checkHistoryFromDesktopTest() {
+        signInFxSync()
+        // Instead of waiting we will wait for the connected screen
+        sleep(5000)
+        tapReturnToPreviousApp()
+        sleep(5000)
         homeScreen {
-        }.openThreeDotMenu {
-            verifySettingsButton()
-        }.openSettings {}
-        settingsAccount()
-        // clickSygnIn()
-        newScreenClickOnEmail()
+        }.openThreeDotMenu {}
+        libraryButton()
+        historyButton()
+        sleep(5000)
+        historyAfterSyncIsShown()
+    }
 
-        typeEmail()
-        tapOnContinueButton()
-        sleep(1000)
-        typePassowrd()
-        tapOnSygIn()
+    @Test
+    fun checkBookmarkFromDesktopTest() {
+        signInFxSync()
         // Instead of waiting we will wait for the connected screen
         sleep(5000)
         tapReturnToPreviousApp()
@@ -61,32 +62,26 @@ class SyncIntegrationTest {
         homeScreen {
         }.openThreeDotMenu {}
         libraryButton()
-        historyButton()
-        sleep(5000)
-        historyAfterSyncIsShown()
+        bookmarkButton()
+        bookmarkAfterSyncIsShown()
     }
 
     @Test
-    fun getHistoryTest() {
+    fun checkBookmarkFromDeviceTest() {
+        tapInToolBar()
+        typeInToolBar()
+        seeBookmark()
+        mDevice.pressBack()
+        signInFxSync()
+    }
+
+    @Test
+    fun checkHistoryFromDeviceTest() {
         tapInToolBar()
         typeInToolBar()
         sleep(3000)
         mDevice.pressBack()
-        homeScreen {
-        }.openThreeDotMenu {
-        }
-        libraryButton()
-        historyButton()
-        historyAfterSyncIsShown()
-    }
-
-    @Test
-    fun openHistory() {
-        homeScreen {
-        }.openThreeDotMenu {}
-        libraryButton()
-        historyButton()
-        historyDisplayed()
+        signInFxSync()
     }
 
     // Useful functions for the tests
@@ -108,11 +103,11 @@ class SyncIntegrationTest {
     }
 
     fun typePassowrd() {
-        mDevice.wait(Until.findObjects(By.text("Sign in")), 10000)
+        mDevice.wait(Until.findObjects(By.text("Sign in")), 3000)
         val passwordInput = mDevice.findObject(UiSelector()
                 .instance(0)
                 .className(EditText::class.java))
-        //passwordInput.waitForExists(10000)
+        // passwordInput.waitForExists(10000)
 
         val passwordValue = javaClass.classLoader.getResource("password.txt").readText()
         // passwordInput.setText(passwordValue)
@@ -142,13 +137,40 @@ class SyncIntegrationTest {
         historyEntry.isClickable()
     }
 
-    fun tapReturnToPreviousApp(){
+    fun bookmarkAfterSyncIsShown() {
+        val bookmarkyEntry = mDevice.findObject(By.text("Example Domain"))
+        bookmarkyEntry.isClickable()
+    }
+
+    fun seeBookmark() {
+        mDevice.wait(Until.findObjects(By.text("Bookmark")), 3000)
+        val bookmarkButton = mDevice.findObject(By.text("Bookmark"))
+        bookmarkButton.click()
+    }
+
+    fun tapReturnToPreviousApp() {
         mDevice.wait(Until.findObjects(By.text("Connected")), 10000)
         val tapXButton = mDevice.findObject(UiSelector()
                 .instance(0)
                 .className(ImageButton::class.java))
         tapXButton.waitForExists(10000)
         tapXButton.click()
+    }
+
+    fun signInFxSync() {
+        homeScreen {
+        }.openThreeDotMenu {
+            verifySettingsButton()
+        }.openSettings {}
+        settingsAccount()
+        // clickSygnIn()
+        newScreenClickOnEmail()
+
+        typeEmail()
+        tapOnContinueButton()
+        sleep(1000)
+        typePassowrd()
+        tapOnSygIn()
     }
 }
 
@@ -158,9 +180,5 @@ fun tapInToolBar() = ClickActions.click { text("Search or enter address") }
 fun awesomeBar() = onView(withId(org.mozilla.fenix.R.id.mozac_browser_toolbar_edit_url_view))
 fun libraryButton() = ClickActions.click { text("Your Library") }
 fun historyButton() = ClickActions.click { text("History") }
-fun historyDisplayed() = onView(withId(org.mozilla.fenix.R.id.delete_history_button))
-        .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+fun bookmarkButton() = ClickActions.click { text("Bookmarks") }
 fun newScreenClickOnEmail() = onView(withId(R.id.sign_in_email_button)).perform(click())
-// To tap on 'x' after sign in, is content-description: Return to previous app and it takes to Settings
-// (one go back and you are in Homescreen)
-// a solution instead of going back by pressing device key
