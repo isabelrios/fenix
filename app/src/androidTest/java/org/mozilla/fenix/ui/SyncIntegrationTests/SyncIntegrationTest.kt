@@ -8,6 +8,7 @@ import android.os.SystemClock.sleep
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import androidx.preference.PreferenceManager
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
@@ -32,6 +33,15 @@ import org.mozilla.fenix.R
 
 class SyncIntegrationTest {
     val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+    val appContext = InstrumentationRegistry.getInstrumentation()
+            .targetContext
+            .applicationContext
+
+    val prefs = PreferenceManager.getDefaultSharedPreferences(appContext)
+            .edit()
+            .putBoolean("pref_key_testing_stage", true)
+            .apply()
 
     @get:Rule
     val activityTestRule = HomeActivityTestRule()
@@ -92,9 +102,9 @@ class SyncIntegrationTest {
         emailInput.waitForExists(1000)
 
         val emailAddress = javaClass.classLoader.getResource("email.txt").readText()
-        // emailInput.setText(emailAddress)
+        emailInput.setText(emailAddress)
         // Use prod test account until stage can be set and so the generated account can be used
-        emailInput.setText("test-123456@restmail.net")
+        // emailInput.setText("test-123456@restmail.net")
     }
 
     fun tapOnContinueButton() {
@@ -110,9 +120,9 @@ class SyncIntegrationTest {
         // passwordInput.waitForExists(10000)
 
         val passwordValue = javaClass.classLoader.getResource("password.txt").readText()
-        // passwordInput.setText(passwordValue)
+        passwordInput.setText(passwordValue)
         // Same for password
-        passwordInput.setText("testGet1")
+        // passwordInput.setText("testGet1")
     }
 
     fun tapOnSygIn() {
@@ -133,8 +143,9 @@ class SyncIntegrationTest {
     }
 
     fun historyAfterSyncIsShown() {
-        val historyEntry = mDevice.findObject(By.text("www.example.com"))
-        historyEntry.isClickable()
+        // val historyEntry = mDevice.findObject(By.text("www.example.com"))
+        // historyEntry.isClickable()
+        mDevice.wait(Until.findObject(By.text("www.example.com")), 5000)
     }
 
     fun bookmarkAfterSyncIsShown() {
@@ -149,12 +160,17 @@ class SyncIntegrationTest {
     }
 
     fun tapReturnToPreviousApp() {
-        mDevice.wait(Until.findObjects(By.text("Connected")), 10000)
+        // mDevice.wait(Until.findObjects(By.text("Connected")), 20000)
+
+        mDevice.wait(Until.findObject(By.text("Settings")), 20000)
+
         val tapXButton = mDevice.findObject(UiSelector()
                 .instance(0)
                 .className(ImageButton::class.java))
         tapXButton.waitForExists(10000)
         tapXButton.click()
+        tapXButton.click()
+        mDevice.pressBack()
     }
 
     fun signInFxSync() {
@@ -163,19 +179,18 @@ class SyncIntegrationTest {
             verifySettingsButton()
         }.openSettings {}
         settingsAccount()
-        // clickSygnIn()
+        // clickSignIn()
         newScreenClickOnEmail()
 
         typeEmail()
         tapOnContinueButton()
-        sleep(1000)
         typePassowrd()
         tapOnSygIn()
     }
 }
 
 fun settingsAccount() = ClickActions.click { text("Turn on Sync") }
-fun clickSygnIn() = onView(allOf(withId(android.R.id.title), withText("Turn on Sync"))).click()
+fun clickSignIn() = onView(allOf(withId(android.R.id.title), withText("Turn on Sync"))).click()
 fun tapInToolBar() = ClickActions.click { text("Search or enter address") }
 fun awesomeBar() = onView(withId(org.mozilla.fenix.R.id.mozac_browser_toolbar_edit_url_view))
 fun libraryButton() = ClickActions.click { text("Your Library") }

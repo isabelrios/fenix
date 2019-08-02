@@ -9,6 +9,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.preference.PreferenceManager
 import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.preference.PreferenceManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -54,6 +55,16 @@ class BackgroundServices(
     companion object {
         const val CLIENT_ID = "a2270f727f45f648"
         const val REDIRECT_URL = "https://accounts.firefox.com/oauth/success/$CLIENT_ID"
+        const val REDIRECT_URL_STAGE = "https://accounts.stage.mozaws.net/oauth/success/$CLIENT_ID"
+    }
+
+    val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+    val testingModeStage = prefs.getBoolean(context.getPreferenceKey(R.string.pref_key_testing_stage), false)
+
+    private val serverConfig = if (testingModeStage) {
+        ServerConfig.dev(CLIENT_ID, REDIRECT_URL_STAGE)
+    } else {
+        ServerConfig.release(CLIENT_ID, REDIRECT_URL)
     }
 
     fun defaultDeviceName(context: Context): String = context.getString(
@@ -63,7 +74,6 @@ class BackgroundServices(
         Build.MODEL
     )
 
-    private val serverConfig = ServerConfig.release(CLIENT_ID, REDIRECT_URL)
     private val deviceConfig = DeviceConfig(
         name = defaultDeviceName(context),
         type = DeviceType.MOBILE,
