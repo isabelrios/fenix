@@ -8,7 +8,6 @@ import android.os.SystemClock.sleep
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import androidx.preference.PreferenceManager
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
@@ -33,15 +32,6 @@ import org.mozilla.fenix.R
 
 class SyncIntegrationTest {
     val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-
-    val appContext = InstrumentationRegistry.getInstrumentation()
-            .targetContext
-            .applicationContext
-
-    val prefs = PreferenceManager.getDefaultSharedPreferences(appContext)
-            .edit()
-            .putBoolean("pref_key_testing_stage", true)
-            .apply()
 
     @get:Rule
     val activityTestRule = HomeActivityTestRule()

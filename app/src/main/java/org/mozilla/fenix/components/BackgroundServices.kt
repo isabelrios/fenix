@@ -9,7 +9,6 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.preference.PreferenceManager
 import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.preference.PreferenceManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -52,20 +51,6 @@ class BackgroundServices(
     historyStorage: PlacesHistoryStorage,
     bookmarkStorage: PlacesBookmarksStorage
 ) {
-    companion object {
-        const val CLIENT_ID = "a2270f727f45f648"
-        const val REDIRECT_URL = "https://accounts.firefox.com/oauth/success/$CLIENT_ID"
-        const val REDIRECT_URL_STAGE = "https://accounts.stage.mozaws.net/oauth/success/$CLIENT_ID"
-    }
-
-    val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-    val testingModeStage = prefs.getBoolean(context.getPreferenceKey(R.string.pref_key_testing_stage), false)
-
-    private val serverConfig = if (testingModeStage) {
-        ServerConfig.dev(CLIENT_ID, REDIRECT_URL_STAGE)
-    } else {
-        ServerConfig.release(CLIENT_ID, REDIRECT_URL)
-    }
 
     fun defaultDeviceName(context: Context): String = context.getString(
         R.string.default_device_name,
@@ -168,7 +153,7 @@ class BackgroundServices(
 
     val accountManager = FxaAccountManager(
         context,
-        serverConfig,
+        FxaServer.config,
         deviceConfig,
         syncConfig,
         // We don't need to specify this explicitly, but `syncConfig` may be disabled due to an 'experiments'
