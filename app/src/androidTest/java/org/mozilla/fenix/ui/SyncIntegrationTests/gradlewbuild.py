@@ -2,27 +2,30 @@ import logging
 import os
 import subprocess
 
-from xcrun import XCRun
+from adbrun import ADBrun
 
 here = os.path.dirname(__file__)
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 
-class XCodeBuild(object):
+class GradlewBuild(object):
     binary = './gradlew'
     logger = logging.getLogger()
-    xcrun = XCRun()
+    adbrun = ADBrun()
 
     def __init__(self, log):
         self.log = log
 
     def test(self, identifier):
-        self.xcrun.launch()
-        #os.chdir('/Users/isabelrios/git/fenix/')
+        self.adbrun.launch()
+        #self.xcrun.launch()
         # Change path accordingly to go to root folder to run gradlew
         os.chdir('../../../../../../../../..')
         args = './gradlew ' + 'app:connectedX86DebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=org.mozilla.fenix.ui.SyncIntegrationTests.SyncIntegrationTest#{}'.format(identifier)
-        os.system(args)
+        # os.system(args)
+        # Whit this the logs are shown when there is a failure
+        # they are saved in ~/fenix/app/build/reports/androidTests/connected/flavors/X86/index.html
+        output = subprocess.check_output(args, shell=True)
 
         # This part below does not work yet...
         '''

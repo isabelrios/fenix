@@ -39,8 +39,6 @@ class SyncIntegrationTest {
     @Test
     fun checkHistoryFromDesktopTest() {
         signInFxSync()
-        // Instead of waiting we will wait for the connected screen
-        sleep(5000)
         tapReturnToPreviousApp()
         sleep(5000)
         homeScreen {
@@ -54,10 +52,7 @@ class SyncIntegrationTest {
     @Test
     fun checkBookmarkFromDesktopTest() {
         signInFxSync()
-        // Instead of waiting we will wait for the connected screen
-        sleep(5000)
         tapReturnToPreviousApp()
-
         sleep(5000)
         homeScreen {
         }.openThreeDotMenu {}
@@ -93,8 +88,6 @@ class SyncIntegrationTest {
 
         val emailAddress = javaClass.classLoader.getResource("email.txt").readText()
         emailInput.setText(emailAddress)
-        // Use prod test account until stage can be set and so the generated account can be used
-        // emailInput.setText("test-123456@restmail.net")
     }
 
     fun tapOnContinueButton() {
@@ -107,12 +100,9 @@ class SyncIntegrationTest {
         val passwordInput = mDevice.findObject(UiSelector()
                 .instance(0)
                 .className(EditText::class.java))
-        // passwordInput.waitForExists(10000)
 
         val passwordValue = javaClass.classLoader.getResource("password.txt").readText()
         passwordInput.setText(passwordValue)
-        // Same for password
-        // passwordInput.setText("testGet1")
     }
 
     fun tapOnSygIn() {
@@ -127,15 +117,14 @@ class SyncIntegrationTest {
         val toolbarInput = mDevice.findObject(UiSelector()
                 .instance(0)
                 .className(EditText::class.java))
-        // toolbarInput.setText("bbc.com" + "\r")
         awesomeBar().perform(replaceText("example.com"),
                 pressImeActionButton())
     }
 
     fun historyAfterSyncIsShown() {
-        // val historyEntry = mDevice.findObject(By.text("www.example.com"))
-        // historyEntry.isClickable()
-        mDevice.wait(Until.findObject(By.text("www.example.com")), 5000)
+        val historyEntry = mDevice.findObject(By.text("www.example.com"))
+        historyEntry.isClickable()
+       // mDevice.wait(Until.findObject(By.text("www.example.com")), 5000)
     }
 
     fun bookmarkAfterSyncIsShown() {
@@ -169,8 +158,7 @@ class SyncIntegrationTest {
             verifySettingsButton()
         }.openSettings {}
         settingsAccount()
-        // clickSignIn()
-        newScreenClickOnEmail()
+        useEmailInsteadButton()
 
         typeEmail()
         tapOnContinueButton()
@@ -180,10 +168,9 @@ class SyncIntegrationTest {
 }
 
 fun settingsAccount() = ClickActions.click { text("Turn on Sync") }
-fun clickSignIn() = onView(allOf(withId(android.R.id.title), withText("Turn on Sync"))).click()
 fun tapInToolBar() = ClickActions.click { text("Search or enter address") }
 fun awesomeBar() = onView(withId(org.mozilla.fenix.R.id.mozac_browser_toolbar_edit_url_view))
 fun libraryButton() = ClickActions.click { text("Your Library") }
 fun historyButton() = ClickActions.click { text("History") }
 fun bookmarkButton() = ClickActions.click { text("Bookmarks") }
-fun newScreenClickOnEmail() = onView(withId(R.id.sign_in_email_button)).perform(click())
+fun useEmailInsteadButton() = onView(withId(R.id.signInEmailButton)).perform(click())

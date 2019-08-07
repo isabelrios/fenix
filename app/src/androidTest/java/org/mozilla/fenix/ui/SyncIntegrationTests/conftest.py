@@ -11,8 +11,7 @@ import pytest
 import requests
 
 from tps import TPS
-from xcodebuild import XCodeBuild
-#from gradlew import GradlewBuild
+from gradlewbuild import GradlewBuild
 
 here = os.path.dirname(__file__)
 
@@ -59,25 +58,28 @@ def tps_addon(pytestconfig, tmpdir_factory):
 def tps_config(fxa_account, monkeypatch):
     monkeypatch.setenv('FXA_EMAIL', fxa_account.email)
     monkeypatch.setenv('FXA_PASSWORD', fxa_account.password)
-    '''
-    f= open("/Users/synctesting/.jenkins/workspace/fenix/app/src/androidTest/resources/email.txt","w+")
+
+    f= open("~/fenix/app/src/androidTest/resources/email.txt","w+")
     f.write(fxa_account.email)
-    f= open("/Users/synctesting/.jenkins/workspace/fenix/app/src/androidTest/resources/password.txt","w+")
+    f= open("~/fenix/app/src/androidTest/resources/password.txt","w+")
     f.write(fxa_account.password)
-    
+
     yield {'fx_account': {
         'username': fxa_account.email,
-        'password': fxa_account.password}}
+        'password': fxa_account.password}
+    }
     '''
+    Prod testing account
     yield {'fx_account': {
         'username': 'test-123456@restmail.net',
         'password': 'testGet1'}}
-    
+    '''
 @pytest.fixture
 def tps_log(pytestconfig, tmpdir):
     tps_log = str(tmpdir.join('tps.log'))
     pytestconfig._tps_log = tps_log
     yield tps_log
+
 
 @pytest.fixture
 def tps_profile(pytestconfig, tps_addon, tps_config, tps_log, fxa_urls):
@@ -100,7 +102,7 @@ def tps_profile(pytestconfig, tps_addon, tps_config, tps_log, fxa_urls):
         'extensions.update.enabled': False,
         'extensions.update.notifyUser': False,
         # While this line is commented prod is launched instead of stage
-        #'identity.fxaccounts.autoconfig.uri': fxa_urls['content'],
+        'identity.fxaccounts.autoconfig.uri': fxa_urls['content'],
         'testing.tps.skipPingValidation': True,
         'services.sync.firstSync': 'notReady',
         'services.sync.lastversion': '1.0',
@@ -121,35 +123,27 @@ def tps_profile(pytestconfig, tps_addon, tps_config, tps_log, fxa_urls):
     pytestconfig._profile = profile.profile
     yield profile
 
-
 @pytest.fixture
 def tps(firefox, firefox_log, monkeypatch, pytestconfig, tps_log, tps_profile):
     yield TPS(firefox, firefox_log, tps_log, tps_profile)
-'''
-@pytest.fixture
-def gradlew(fxa_account, monkeypatch):
-    monkeypatch.setenv('FXA_EMAIL', fxa_account.email)
-    monkeypatch.setenv('FXA_PASSWORD', fxa_account.password)
-    #yield GradlewBuild(xcodebuild_log)
-'''
-@pytest.fixture
-def xcodebuild_log(pytestconfig, tmpdir):
-    xcodebuild_log = str(tmpdir.join('xcodebuild.log'))
-    pytestconfig._xcodebuild_log = xcodebuild_log
-    yield xcodebuild_log
 
 @pytest.fixture
-def xcodebuild(fxa_account, monkeypatch, xcodebuild_log):
+def gradlewbuild_log(pytestconfig, tmpdir):
+    gradlewbuild_log = str(tmpdir.join('gradlewbuild.log'))
+    pytestconfig._gradlewbuild_log = gradlewbuild_log
+    yield gradlewbuild_log
+
+@pytest.fixture
+def gradlewbuild(fxa_account, monkeypatch, gradlewbuild_log):
     monkeypatch.setenv('FXA_EMAIL', fxa_account.email)
     monkeypatch.setenv('FXA_PASSWORD', fxa_account.password)
-    yield XCodeBuild(xcodebuild_log)
+    yield GradlewBuild(gradlewbuild_log)
 
 def pytest_addoption(parser):
     parser.addoption('--firefox', help='path to firefox binary (defaults to '
                      'downloading latest nightly build)')
     parser.addoption('--tps', help='path to tps add-on (defaults to '
                      'downloading latest nightly build)')
-
 
 @pytest.mark.hookwrapper
 def pytest_runtest_makereport(item, call):
@@ -167,7 +161,7 @@ def pytest_runtest_makereport(item, call):
                     with io.open(path, 'r', encoding='utf8') as f:
                         extra.append(pytest_html.extras.text(f.read(), 'Sync'))
                 report.sections.append(('Sync', 'Log: {}'.format(path)))
-    for log in ('Firefox', 'TPS', 'XCodeBuild'):
+    for log in ('Firefox', 'TPS', 'GradlewBuild'):
         attr = '_{}_log'.format(log.lower())
         path = getattr(item.config, attr, None)
         if path is not None and os.path.exists(path):
