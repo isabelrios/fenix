@@ -25,20 +25,18 @@ class GradlewBuild(object):
         # os.system(args)
         # Whit this the logs are shown when there is a failure
         # they are saved in ~/fenix/app/build/reports/androidTests/connected/flavors/X86/index.html
-        output = subprocess.check_output(args, shell=True)
+        # output = subprocess.check_output(args, shell=True)
 
         # This part below does not work yet...
-        '''
+
         self.logger.info('Running: {}'.format(' '.join(args)))
         try:
             out = subprocess.check_output(
-                args,
-                cwd=os.path.join(here, os.pardir),
-                stderr=subprocess.STDOUT)
+                args, shell=True)
         except subprocess.CalledProcessError as e:
             out = e.output
             raise
         finally:
             with open(self.log, 'w') as f:
                 f.writelines(out)
-        '''
+

@@ -13,15 +13,12 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.action.ViewActions.pressImeActionButton
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
 
 import org.junit.Rule
 import org.junit.Test
 import org.mozilla.fenix.helpers.HomeActivityTestRule
 import org.mozilla.fenix.ui.robots.homeScreen
 import br.com.concretesolutions.kappuccino.actions.ClickActions
-import org.hamcrest.Matchers.allOf
-import org.mozilla.fenix.helpers.click
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
@@ -124,7 +121,6 @@ class SyncIntegrationTest {
     fun historyAfterSyncIsShown() {
         val historyEntry = mDevice.findObject(By.text("www.example.com"))
         historyEntry.isClickable()
-       // mDevice.wait(Until.findObject(By.text("www.example.com")), 5000)
     }
 
     fun bookmarkAfterSyncIsShown() {
@@ -139,9 +135,10 @@ class SyncIntegrationTest {
     }
 
     fun tapReturnToPreviousApp() {
-        // mDevice.wait(Until.findObjects(By.text("Connected")), 20000)
+        mDevice.wait(Until.findObjects(By.text("Connected")), 2000)
 
-        mDevice.wait(Until.findObject(By.text("Settings")), 20000)
+        val settingsLabel = mDevice.wait(Until.findObject(By.text("Settings")), 20000)
+        settingsLabel.isClickable()
 
         val tapXButton = mDevice.findObject(UiSelector()
                 .instance(0)

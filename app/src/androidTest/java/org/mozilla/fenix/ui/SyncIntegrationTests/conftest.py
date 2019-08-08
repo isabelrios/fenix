@@ -59,21 +59,16 @@ def tps_config(fxa_account, monkeypatch):
     monkeypatch.setenv('FXA_EMAIL', fxa_account.email)
     monkeypatch.setenv('FXA_PASSWORD', fxa_account.password)
 
-    f= open("~/fenix/app/src/androidTest/resources/email.txt","w+")
+    f= open("/Users/synctesting/.jenkins/workspace/fenix@2/app/src/androidTest/resources/email.txt","w+")
     f.write(fxa_account.email)
-    f= open("~/fenix/app/src/androidTest/resources/password.txt","w+")
+    f= open("/Users/synctesting/.jenkins/workspace/fenix@2/app/src/androidTest/resources/password.txt","w+")
     f.write(fxa_account.password)
 
     yield {'fx_account': {
         'username': fxa_account.email,
         'password': fxa_account.password}
     }
-    '''
-    Prod testing account
-    yield {'fx_account': {
-        'username': 'test-123456@restmail.net',
-        'password': 'testGet1'}}
-    '''
+
 @pytest.fixture
 def tps_log(pytestconfig, tmpdir):
     tps_log = str(tmpdir.join('tps.log'))

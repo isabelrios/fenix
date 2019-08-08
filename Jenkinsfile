@@ -18,4 +18,17 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            script {
+                 publishHTML(target: [
+                     allowMissing: false,
+                     alwaysLinkToLastBuild: true,
+                     keepAll: true,
+                     reportDir: '/Users/synctesting/.jenkins/workspace/fenix/app/src/androidTest/java/org/mozilla/fenix/ui/SyncIntegrationTests/results',
+                     reportFiles: 'index.html',
+                     reportName: 'HTML Report'])
+            }
+        }
+    }
 }
