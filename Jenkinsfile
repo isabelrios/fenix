@@ -30,5 +30,17 @@ pipeline {
                      reportName: 'HTML Report'])
             }
         }
+
+        failure {
+            slackSend(
+                color: 'danger',
+                message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+        }
+
+        fixed {
+            slackSend(
+                color: 'good',
+                message: "FIXED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+        }
     }
 }
