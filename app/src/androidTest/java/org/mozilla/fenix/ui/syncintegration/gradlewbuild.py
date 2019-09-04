@@ -21,7 +21,7 @@ class GradlewBuild(object):
         #self.xcrun.launch()
         # Change path accordingly to go to root folder to run gradlew
         os.chdir('../../../../../../../../..')
-        args = './gradlew ' + 'app:connectedX86DebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=org.mozilla.fenix.ui.SyncIntegrationTests.SyncIntegrationTest#{}'.format(identifier)
+        args = './gradlew ' + 'app:connectedGeckoNightlyDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=org.mozilla.fenix.ui.syncintegration.SyncIntegrationTest#{}'.format(identifier)
         # os.system(args)
         # Whit this the logs are shown when there is a failure
         # they are saved in ~/fenix/app/build/reports/androidTests/connected/flavors/X86/index.html

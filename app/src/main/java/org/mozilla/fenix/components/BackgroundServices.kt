@@ -28,7 +28,6 @@ import mozilla.components.feature.push.PushConfig
 import mozilla.components.feature.push.PushSubscriptionObserver
 import mozilla.components.feature.push.PushType
 import mozilla.components.service.fxa.DeviceConfig
-import mozilla.components.service.fxa.ServerConfig
 import mozilla.components.service.fxa.SyncConfig
 import mozilla.components.service.fxa.manager.FxaAccountManager
 import mozilla.components.service.fxa.sync.GlobalSyncableStoreProvider
